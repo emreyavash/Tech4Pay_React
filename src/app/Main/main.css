@@ -1,0 +1,53 @@
+.mainContainer {
+  margin-top: 35px;
+  margin-bottom: 50px;
+}
+.mainDiv {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.mainBox {
+  border: 1px solid #93bfcf;
+  height: 180px;
+  border-radius: 15px;
+  background-color: #93bfcf;
+}
+.mainInfo {
+  justify-content: start;
+  align-items: start;
+  text-align: start;
+  margin-top: 25px;
+  margin-left: 65px;
+  position: relative;
+}
+.mainText {
+  font-size: 22px;
+  font-weight: 400;
+  color: #eeeeee;
+}
+.mainNumberDiv {
+  margin-left: 25px;
+}
+.mainNumber {
+  font-size: 30px;
+  font-weight: 600;
+  color: #203562;
+}
+.mainIcon {
+  position: absolute;
+  right: 100px;
+  top: 20px;
+}
+.mainSubText {
+  display: inline-block;
+  color: #eeeeee;
+}
+.successText {
+  display: inline-block;
+  color: greenyellow;
+}
+.errorText {
+  display: inline-block;
+  color: red;
+}

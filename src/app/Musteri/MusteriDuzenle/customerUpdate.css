@@ -1,0 +1,34 @@
+.customerAddContainer{
+    margin-left: 65px;
+  
+}
+.customerAddDiv{
+    padding-top: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.customerInput{
+    width: 500px;
+}
+.btnDiv{
+   
+    text-align: end;
+}
+.resetBtn{
+    border: none;
+    background-color: #952323;
+    color: #E3E8F8 ;
+    margin-right: 15px;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px ;
+}
+.addBtn{
+    border: none;
+    background-color: #203562;
+    color: #E3E8F8;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px ;
+}
