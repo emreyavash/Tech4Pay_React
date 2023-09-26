@@ -1,7 +1,9 @@
+"use client"
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "./Menu/navbar";
 import ListMenu from "./Menu/ListMenu";
+import { useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,16 +17,27 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  const [isLogin,setLogin]=useState(false)
+  useEffect(()=>{
+  let login = localStorage.getItem("login")
+
+    setLogin(login =="success"?true:false)
+
+  },[])
   return (
     <html lang="en">
       <head>
+        <title>Abp Customer App</title>
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
           rel="stylesheet"
         />
       </head>
       <body>
-        <div className="container-fluid ">
+        {
+          isLogin?
+          <div className="container-fluid ">
           <div className="row">
             <div className="col-3 mt-4 h-100 ">
               <ListMenu />
@@ -35,6 +48,10 @@ export default function RootLayout({
             </div>
           </div>
         </div>
+        :
+        <div className="row">{children}</div>
+        }
+        
       </body>
     </html>
   );

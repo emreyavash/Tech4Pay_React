@@ -1,0 +1,73 @@
+body {
+  overflow: hidden; /* Hide scrollbars */
+}
+.loginContainer {
+  background-color: #203562;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+.loginDiv {
+  width: 600px;
+  height: 80vh;
+  border: 1px solid black;
+  background-color: #ffffff;
+  border-radius: 20px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.loginBox {
+  width: 400px;
+}
+.brandContainer {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand {
+  top: 80px;
+  color: #203562;
+}
+.loginIputContainer {
+  margin-top: 100px;
+}
+
+.loginInput {
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+.subTextContainer{
+    text-align: end;
+    justify-content: end;
+    align-items: end;
+}
+.register{
+    text-decoration: none;
+    color: #203562;
+}
+.btnContainer {
+  text-align: end;
+  justify-content: end;
+  align-items: end;
+  margin-top: 15px;
+}
+.loginBtn {
+  border: none;
+  background-color: #203562;
+  color: #fff;
+  width: 130px;
+  height: 45px;
+  border-radius: 6px;
+}
+.rememberDiv{
+  text-align: start;
+  justify-content: start;
+  align-items: start;
+}

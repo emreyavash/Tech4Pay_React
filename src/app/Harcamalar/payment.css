@@ -1,0 +1,46 @@
+
+#tableMain {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  #tableMain th,
+  #tableMain td {
+    padding: 8px;
+    text-align: start;
+  }
+  .tableHead {
+    background-color: #3e588f;
+  }
+  .tableHeadText {
+    color: #e3e8f8;
+    font-size: 18px;
+  }
+  .tableTr {
+    border-bottom: 1px solid #203562;
+  }
+  .tableTr:nth-child(even) {
+    background-color: #f0f2f7;
+    color: #203562;
+  }
+  
+  #tableMain td {
+    padding: 20px 20px 20px 8px;
+  }
+  
+  .editBtn {
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    background-color: #eb6440;
+    color: #e3e8f8;
+  }
+  .deleteBtn {
+    width: 60px;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    background-color: #b70404;
+    color: #e3e8f8;
+  }
+  

@@ -7,12 +7,15 @@ import {
   TextField,
 } from "@mui/material";
 import "./profil.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export default function Page() {
   const [gender, setGender] = useState("");
   const handleChange = (event: any) => {
     setGender(event.target.value);
   };
+  useEffect(()=>{
+    
+  })
   return (
     <div className="profileContainer">
       <div className="row profileDiv">

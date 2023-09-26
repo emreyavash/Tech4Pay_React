@@ -1,16 +1,20 @@
 .customerAddContainer{
     margin-left: 65px;
-  
+  display: flex;
+  text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+
 }
 .customerAddDiv{
     padding-top: 50px;
-    align-items: center;
-    justify-content: center;
+   
+    width: 100%;
+    
 }
 
-.customerInput{
-    width: 500px;
-}
+
 .btnDiv{
    
     text-align: end;
