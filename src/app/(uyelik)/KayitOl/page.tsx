@@ -4,19 +4,39 @@ import "./register.css";
 
 import { useState } from "react";
 import axios from "axios";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import { useRouter } from "next/navigation";
+
+type Input = {
+  email: string;
+  password: string;
+  name:string;
+  surname:string;
+  userName:string
+};
+const schema = yup.object({
+  email:yup.string().required("Zorunlu Alan").email("Email adresi `@` ve `.com` içermelidir."),
+  password:yup.string().required("Zorunlu Alan").min(6,"Şifre 6 karakterden fazla olmalıdır"),
+  name:yup.string().required("Zorunlu Alan"),
+  surname:yup.string().required("Zorunlu Alan"),
+  userName:yup.string().required("Zorunlu Alan").min(5,"Kullanıcı adı en az 5 karakter olabilir.").max(15,"Kullanıcı adı en fazla 15 karakter olabilir."),
+
+})
+
 export default function Page() {
+  const {register,handleSubmit,formState:{errors}} = useForm<Input>({resolver:yupResolver(schema)});
   const [registerMessage, setRegisterMessage] = useState("");
   const [className, setClassName] = useState("");
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
+  const router = useRouter();
+  const Register = (event: any) => {
     axios.post("https://localhost:44321/api/account/register", {
-        name: data.get("firstName"),
-        surname: data.get("lastName"),
-        userName: data.get("userName"),
-        emailAddress: data.get("email"),
-        password: data.get("password"),
+        name: event.name,
+        surname: event.surname,
+        userName: event.userName,
+        emailAddress: event.email,
+        password: event.password,
         appName: "string",
       })
       .then((res) => {
@@ -26,9 +46,12 @@ export default function Page() {
             "Başarılı bir şekilde kaydoldunuz. Giriş Yapabilirsiniz."
           );
           setClassName("text-success text-center");
+          router.push("/")
         }
+
       })
       .catch((error) => {
+        console.log(error)
         if (error.response) {
           setRegisterMessage(error.response.data.error.message);
           setClassName("text-danger text-start");
@@ -41,7 +64,7 @@ export default function Page() {
         <Box
           component="form"
           method="post"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(Register)}
           className="row registerBox"
         >
           <div className="brandContainer">
@@ -50,38 +73,43 @@ export default function Page() {
           <div className="col-7 mb-4">
             <TextField
               id="firstName"
-              name="firstName"
+              {...register("name")}
               label="Ad"
               fullWidth
               variant="outlined"
             />
+          {errors.name ?<p className="text-end text-danger">{errors.name?.message}</p>:null}
           </div>
           <div className="col-7 mb-4">
             <TextField
               id="lastName"
-              name="lastName"
+              {...register("surname")}
               label="Soyad"
               fullWidth
               variant="outlined"
             />
+          {errors.surname ?<p className="text-end text-danger">{errors.surname?.message}</p>:null}
           </div>
           <div className="col-7 mb-4">
             <TextField
               id="userName"
-              name="userName"
+              {...register("userName")}
               label="Kullanıcı Adı"
               fullWidth
               variant="outlined"
             />
+          {errors.userName ?<p className="text-end text-danger">{errors.userName?.message}</p>:null}
           </div>
+
           <div className="col-7 mb-4">
             <TextField
               id="email"
-              name="email"
+              {...register("email")}
               label="Email"
               fullWidth
               variant="outlined"
             />
+          {errors.email ?<p className="text-end text-danger">{errors.email?.message}</p>:null}
           </div>
           <div className="col-7 mb-4">
             <TextField
@@ -90,8 +118,9 @@ export default function Page() {
               type="password"
               fullWidth
               variant="outlined"
-              name="password"
+              {...register("password")}
             />
+          {errors.password ?<p className="text-end text-danger">{errors.password?.message}</p>:null}
           </div>
           <div>
             <p className={className}>{registerMessage}</p>

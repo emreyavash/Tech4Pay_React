@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,20 +5,20 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-function createData(name:any, calories:any, fat:any, carbs:any, protein:any) {
-  return { name, calories, fat, carbs, protein };
-}
 
-const rows = [
-  createData('Emre', 'Yavaş', 'emreyavas@gmail.com', 'Erkek', '08/09/2023'),
-  createData('Ahmet', 'Tek', 'ahmettek@gmail.com', 'Erkek', '08/09/2023'),
-  createData('Ayşe', 'Türk', 'ayseturk@gmail.com', 'Kadın', '08/09/2023'),
-  createData('Fatma', 'Sıra', 'fatmasira@gmail.com', 'Kadın', '08/09/2023'),
 
-];
 
 export default function MainTable() {
+  const[customers,setCustomers]=useState([])
+  useEffect(()=>{
+    axios.get("https://localhost:44321/api/Customer/GetCustomers").then(res=>{
+      setCustomers(res.data)
+    })
+    console.log(customers)
+  },[])
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -33,18 +32,18 @@ export default function MainTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {customers.map((customer:any) => (
             <TableRow
-              key={row.name}
+              key={customer.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.name}
+                {customer.firstName}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+              <TableCell align="right">{customer.lastName}</TableCell>
+              <TableCell align="right">{customer.customerEmails[0].email}</TableCell>
+              <TableCell align="right">{customer.gender ? "Erkek":"Kadın"}</TableCell>
+              <TableCell align="right">{customer.createDateTime}</TableCell>
             </TableRow>
           ))}
         </TableBody>

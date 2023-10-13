@@ -8,6 +8,9 @@ export default function Page() {
   const url = "https://localhost:44321/api/Customer/GetCustomers";
   const [customers, setCustomers] = useState([]);
   const router = useRouter();
+  const DeleteCustomer =(id:any)=>{
+      axios.delete("https://localhost:44321/api/Customer/DeleteCustomer?id="+id).then(res=>console.log("başarıyla silindi."))
+  }
   useEffect(() => {
     axios.get(url).then((res) => {
       setCustomers(res.data);
@@ -57,7 +60,7 @@ export default function Page() {
                   <button className="editBtn" onClick={()=>router.push("/Musteri/"+customer.id  )}>Düzenle</button>
                 </td>
                 <td>
-                  <button className="deleteBtn">Sil</button>
+                  <button className="deleteBtn" onClick={()=>DeleteCustomer(customer.id)}>Sil</button>
                 </td>
               </tr>
             ))}

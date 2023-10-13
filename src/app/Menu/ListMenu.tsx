@@ -12,7 +12,6 @@ export default function ListMenu() {
                     <li className="navbarItem"><a href="/Musteri">Müşteriler</a></li>
                     <li className="navbarItem"><a href="/Profil">Profilim</a></li>
                     <li className="navbarItem"><a href="/Harcamalar">Harcamalar</a></li>
-                    <li className="navbarItem"><a href="/Musteri">İletişim Bilgileri</a></li>
                 </ul>
             </div>
             <div className="userContainer">

@@ -7,31 +7,79 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 // "95d28054-6e45-dbc8-887c-3a0c0c277219" kişisel address id
 //"8215ef34-2e23-3b95-0045-3a0c0c20b6eb" iş teelefon id
+
+type Input = {
+  name: string;
+  surname: string;
+  tcNo: string;
+  gender: boolean;
+  email: string;
+  busiEmail: string;
+  phoneNumber: string;
+  busiPhoneNumber: string;
+  address: string;
+  busiAddress: string;
+};
+const schema = yup.object({
+  name: yup.string().required("Zorunlu Alan"),
+  surname: yup.string().required("Zorunlu Alan"),
+  tcNo: yup.string().required("Zorunlu Alan"),
+  gender: yup.boolean().required("Zorunlu Alan"),
+  email: yup
+    .string()
+    .required("Zorunlu Alan")
+    .email("Email adresi `@` ve `.com` içermelidir."),
+  busiEmail: yup
+    .string()
+    .required("Zorunlu Alan")
+    .email("Email adresi `@` ve `.com` içermelidir."),
+  phoneNumber: yup.string().required("Zorunlu Alan"),
+  busiPhoneNumber: yup.string().required("Zorunlu Alan"),
+  address: yup.string().required("Zorunlu Alan"),
+  busiAddress: yup.string().required("Zorunlu Alan"),
+});
+
 export default function Page({ params }: { params: { id: any } }) {
   const userId = params.id;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Input>({ resolver: yupResolver(schema) });
 
   const [user, setUser] = useState(Object);
   const [userEmail, setUserEmail] = useState<any[]>([]);
   const [userAddress, setUserAddress] = useState<any[]>([]);
   const [userPhoneNumber, setUserPhoneNumber] = useState<any[]>([]);
   const [gender, setGender] = useState("");
-  const deneme = user.emailTypeId
-  const userEmailExist = userEmail.flatMap(
+  const userPersonelEmailExist = userEmail.find(
     (x: any) => x.emailTypeId == "500acc74-e0f1-d252-a731-3a0c3c9ecc05"
-  )[0];
-  const userNumberExist = userPhoneNumber.flatMap(
+  );
+  const userBusinessEmailExist = userEmail.find(
+    (x: any) => x.emailTypeId == "432844ab-90a3-4f39-db1d-3a0c091240e3"
+  );
+
+  const userPersonelNumberExist = userPhoneNumber.find(
     (x: any) => x.phoneTypeId == "2bf796d4-2301-d978-b30b-3a0c0c2ff0fc"
-  )[0];
-  const userAddressExist = userAddress.flatMap(
+  );
+  const userBusinessNumberExist = userPhoneNumber.find(
+    (x: any) => x.phoneTypeId == "8215ef34-2e23-3b95-0045-3a0c0c20b6eb"
+  );
+  const userPersonelAddressExist = userAddress.find(
     (x: any) => x.addressId == "95d28054-6e45-dbc8-887c-3a0c0c277219"
-  )[0];
+  );
+  const userBusinessAddressExist = userAddress.find(
+    (x: any) => x.addressId == "3edb8d80-74d6-5919-e707-3a0c0911bba4"
+  );
   const handleChange = (event: any) => {
     setGender(event.target.value);
   };
   useEffect(() => {
-    console.log(user)
     axios
       .get("https://localhost:44321/api/Customer/GetCustomerById?id=" + userId)
       .then((res) => {
@@ -44,89 +92,111 @@ export default function Page({ params }: { params: { id: any } }) {
         console.log(err);
       });
   }, [user.id]);
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const CustomerUpdate = (event: any) => {
+    axios
+      .put("https://localhost:44321/api/app/customer/" + userId + "/customer", {
+        firstName: event.name,
+        lastName: event.surname,
+        tcNo: event.tcNo,
+        gender: event.gender,
 
-    axios.post("https://localhost:44321/api/Customer/CreateCustomer", {
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      tcNo: data.get("tcNo"),
-      gender: data.get("gender"),
-
-      customerAddresses: [
-        {
-          addressId: "95d28054-6e45-dbc8-887c-3a0c0c277219",
-          address: data.get("address"),
-        },
-        {
-          addressId: "3edb8d80-74d6-5919-e707-3a0c0911bba4",
-          address: data.get("busiAddress"),
-        },
-      ],
-      customerPhoneNumbers: [
-        {
-          phoneTypeId: "2bf796d4-2301-d978-b30b-3a0c0c2ff0fc",
-          phoneNumber: data.get("phoneNumber"),
-        },
-        {
-          phoneTypeId: "8215ef34-2e23-3b95-0045-3a0c0c20b6eb",
-          phoneNumber: data.get("busiPhoneNumber"),
-        },
-      ],
-      customerEmails: [
-        {
-          emailTypeId: "500acc74-e0f1-d252-a731-3a0c3c9ecc05",
-          email: data.get("email"),
-        },
-        {
-          emailTypeId: "432844ab-90a3-4f39-db1d-3a0c091240e3",
-          email: data.get("busiEmail"),
-        },
-      ],
-      customerPaymentInfos: [
-        {
-          paymentId: "285245ef-3d84-052d-98a7-3a0c3c9d499a",
-        },
-      ],
-    });
+        customerAddresses: [
+          {
+            addressId: "95d28054-6e45-dbc8-887c-3a0c0c277219",
+            address: event.address,
+          },
+          {
+            addressId: "3edb8d80-74d6-5919-e707-3a0c0911bba4",
+            address: event.busiAddress,
+          },
+        ],
+        customerPhoneNumbers: [
+          {
+            phoneTypeId: "2bf796d4-2301-d978-b30b-3a0c0c2ff0fc",
+            phoneNumber: event.phoneNumber,
+          },
+          {
+            phoneTypeId: "8215ef34-2e23-3b95-0045-3a0c0c20b6eb",
+            phoneNumber: event.busiPhoneNumber,
+          },
+        ],
+        customerEmails: [
+          {
+            emailTypeId: "500acc74-e0f1-d252-a731-3a0c3c9ecc05",
+            email: event.email,
+          },
+          {
+            emailTypeId: "432844ab-90a3-4f39-db1d-3a0c091240e3",
+            email: event.busiEmail,
+          },
+        ],
+        customerPaymentInfos: [
+          {
+            paymentId: "285245ef-3d84-052d-98a7-3a0c3c9d499a",
+          },
+        ],
+      })
+      .then((res) => {
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+  const DeleteInput =(event:any)=>{
+    event.preventDefault();
+    setUser([])
+    console.log(user)
+  }
   return (
     <div className="customerUpdateContainer ">
       <div className="customerUpdateDiv">
-        <Box component="form" method="post" onSubmit={handleSubmit}>
+        <Box
+          component="form"
+          method="post"
+          onSubmit={handleSubmit(CustomerUpdate)}
+        >
           <div className="col-5 mb-4">
             <TextField
               id="firstName"
-              name="firstName"
+              {...register("name")}
               label="Ad"
               fullWidth
               variant="outlined"
               defaultValue={user.firstName}
               focused
             />
+            {errors.name ? (
+              <p className="text-end text-danger">{errors.name?.message}</p>
+            ) : null}
           </div>
           <div className="col-5 mb-4">
             <TextField
               id="lastName"
-              name="lastName"
+              {...register("surname")}
               label="Soyad"
               fullWidth
               variant="outlined"
               defaultValue={user.lastName}
               focused
             />
+            {errors.surname ? (
+              <p className="text-end text-danger">{errors.surname?.message}</p>
+            ) : null}
           </div>
           <div className="col-5 mb-4">
             <TextField
               id="tcNo"
-              name="tcNo"
+              {...register("tcNo")}
               label="Tc No"
               fullWidth
               variant="outlined"
               defaultValue={user.tcNo}
               focused
             />
+            {errors.tcNo ? (
+              <p className="text-end text-danger">{errors.tcNo?.message}</p>
+            ) : null}
           </div>
           <div className="col-5 mb-4">
             <FormControl fullWidth>
@@ -134,7 +204,7 @@ export default function Page({ params }: { params: { id: any } }) {
               <Select
                 labelId="genderInput"
                 id="gender"
-                name="gender"
+                {...register("gender")}
                 defaultValue={gender}
                 label="Cinsiyet"
                 onChange={handleChange}
@@ -143,152 +213,171 @@ export default function Page({ params }: { params: { id: any } }) {
                 <MenuItem value={"false"}>Kadın</MenuItem>
               </Select>
             </FormControl>
+            {errors.gender ? (
+              <p className="text-end text-danger">{errors.gender?.message}</p>
+            ) : null}
           </div>
-          {/* Email div */}
           <div className="col-5 mb-4">
-            {userEmail.length != 0 && userEmailExist ? (
+            {/* Email div */}
+            {userPersonelEmailExist != undefined ? (
               <TextField
                 id="email"
                 label="Email"
-                name="email"
+                {...register("email")}
                 fullWidth
                 variant="outlined"
-                defaultValue={userEmail[0].email}
+                defaultValue={userPersonelEmailExist.email}
                 focused
               />
             ) : (
               <TextField
                 id="email"
                 label="Email"
-                name="email"
+                {...register("email")}
                 fullWidth
                 variant="outlined"
               />
             )}
+            {errors.email ? (
+              <p className="text-end text-danger">{errors.email?.message}</p>
+            ) : null}
           </div>
-          {/*Business Email div */}
           <div className="col-5 mb-4">
-            {userEmail.length != 0 ? (
+            {/*  Business Email div */}
+            {userBusinessEmailExist != undefined ? (
               <TextField
-                id="email"
+                id="busiEmail"
                 label="İş Email"
-                name="email"
+                {...register("busiEmail")}
                 fullWidth
                 variant="outlined"
-                defaultValue={
-                  !userEmailExist ? userEmail[0].email : userEmail[1].email
-                }
+                defaultValue={userBusinessEmailExist.email}
                 focused
               />
             ) : (
               <TextField
-                id="email"
+                id="busiEmail"
                 label="İş Email"
-                name="email"
+                {...register("busiEmail")}
                 fullWidth
                 variant="outlined"
               />
             )}
+            {errors.busiEmail ? (
+              <p className="text-end text-danger">
+                {errors.busiEmail?.message}
+              </p>
+            ) : null}
           </div>
           {/* Phone number div */}
           <div className="col-5 mb-4">
-            {userPhoneNumber.length != 0 && userNumberExist ? (
+            {userPersonelNumberExist != undefined ? (
               <TextField
                 id="phoneNumber"
-                name="phoneNumber"
+                {...register("phoneNumber")}
                 label="Telefon Numarası"
                 fullWidth
                 variant="outlined"
-                defaultValue={userPhoneNumber[0].phoneNumber}
+                defaultValue={userPersonelNumberExist.phoneNumber}
                 focused
               />
             ) : (
               <TextField
                 id="phoneNumber"
-                name="phoneNumber"
+                {...register("phoneNumber")}
                 label="Telefon Numarası"
                 fullWidth
                 variant="outlined"
               />
             )}
+            {errors.phoneNumber ? (
+              <p className="text-end text-danger">
+                {errors.phoneNumber?.message}
+              </p>
+            ) : null}
           </div>
           {/* Business Phone number div */}
           <div className="col-5 mb-4">
-            {userPhoneNumber.length != 0 || userNumberExist==false? (
+            {userBusinessNumberExist != undefined ? (
               <TextField
                 id="busiPhoneNumber"
-                name="busiPhoneNumber"
+                {...register("busiPhoneNumber")}
                 label="İş Telefon Numarası"
                 fullWidth
                 variant="outlined"
-                defaultValue={
-                  (!userNumberExist)
-                    ? userPhoneNumber[0].phoneNumber
-                    : userPhoneNumber[1].phoneNumber
-                }
+                defaultValue={userBusinessNumberExist.phoneNumber}
                 focused
               />
             ) : (
               <TextField
                 id="busiPhoneNumber"
-                name="busiPhoneNumber"
+                {...register("busiPhoneNumber")}
                 label="İş Telefon Numarası"
                 fullWidth
                 variant="outlined"
               />
             )}
+            {errors.busiPhoneNumber ? (
+              <p className="text-end text-danger">
+                {errors.busiPhoneNumber?.message}
+              </p>
+            ) : null}
           </div>
           {/* Address div */}
           <div className="col-5 mb-4">
-            {userAddress.length != 0 && userAddressExist ? (
+            {userPersonelAddressExist != undefined ? (
               <TextField
                 id="address"
-                name="address"
+                {...register("address")}
                 label="Adres"
                 fullWidth
                 variant="outlined"
-                defaultValue={userAddress[0].address}
+                defaultValue={userPersonelAddressExist.address}
                 focused
               />
             ) : (
               <TextField
                 id="address"
-                name="address"
+                {...register("address")}
                 label="Adres"
                 fullWidth
                 variant="outlined"
               />
             )}
+            {errors.address ? (
+              <p className="text-end text-danger">{errors.address?.message}</p>
+            ) : null}
           </div>
           {/* Business Address div */}
           <div className="col-5 mb-4">
-            {userAddress.length != 0 ? (
+            {userBusinessAddressExist != undefined ? (
               <TextField
                 id="busiAddress"
-                name="busiAddress"
+                {...register("busiAddress")}
                 label="İş Adresi"
                 fullWidth
                 variant="outlined"
-                defaultValue={
-                  !userAddressExist
-                    ? userAddress[0].address
-                    : userAddress[1].address
-                }
+                defaultValue={userBusinessAddressExist.address}
                 focused
               />
             ) : (
               <TextField
                 id="busiAddress"
-                name="busiAddress"
+                {...register("busiAddress")}
                 label="İş Adresi"
                 fullWidth
                 variant="outlined"
               />
             )}
+            {errors.busiAddress ? (
+              <p className="text-end text-danger">
+                {errors.busiAddress?.message}
+              </p>
+            ) : null}
           </div>
 
           <div className="col-10 btnDiv">
-            <button className="resetBtn">Temizle</button>
+            <button className="resetBtn" onClick={DeleteInput}>Temizle</button>
 
             <button className="addBtn">Düzenle</button>
           </div>

@@ -13,9 +13,8 @@ export default function Page() {
   const handleChange = (event: any) => {
     setGender(event.target.value);
   };
-  useEffect(()=>{
-    
-  })
+  const email = localStorage.getItem("email")
+
   return (
     <div className="profileContainer">
       <div className="row profileDiv">
